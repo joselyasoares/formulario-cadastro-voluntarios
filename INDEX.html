@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Voluntários</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #56ab2f 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2d6a4f;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .header .emoji {
+            font-size: 48px;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #52b788;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            color: #2d6a4f;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        label .required {
+            color: #e74c3c;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #d8f3dc;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        input[type="text"]:focus,
+        input[type="tel"]:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #52b788;
+            box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.1);
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #52b788 0%, #2d6a4f 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(82, 183, 136, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .info-text {
+            color: #74c69d;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        @media (max-width: 600px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            border: 2px solid #d8f3dc;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .checkbox-option:hover {
+            border-color: #52b788;
+            background: #f7fdf9;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #52b788;
+        }
+
+        .checkbox-option label {
+            margin: 0;
+            font-weight: 400;
+            cursor: pointer;
+            flex: 1;
+        }
+
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .loading-message {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="emoji">🤝</div>
+            <h1>Cadastro de Voluntários</h1>
+            <p>Junte-se a nós e faça a diferença! Preencha seus dados abaixo.</p>
+        </div>
+
+        <div id="successMessage" class="message success-message">
+            ✅ Cadastro realizado com sucesso! Obrigado por se voluntariar! 🤝💚
+        </div>
+
+        <div id="errorMessage" class="message error-message">
+            ❌ Erro ao realizar cadastro. Por favor, tente novamente.
+        </div>
+
+        <div id="loadingMessage" class="message loading-message">
+            <span class="spinner"></span> Enviando seu cadastro...
+        </div>
+
+        <form id="voluntariosForm">
+            <!-- Nome -->
+            <div class="form-group">
+                <label for="nome">Nome Completo <span class="required">*</span></label>
+                <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
+            </div>
+
+            <!-- Telefone -->
+            <div class="form-group">
+                <label for="telefone">Telefone <span class="required">*</span></label>
+                <input type="tel" id="telefone" name="telefone" required placeholder="(00) 00000-0000" maxlength="15">
+            </div>
+
+            <!-- Equipes -->
+            <div class="form-group">
+                <label>Equipe(s) que deseja trabalhar <span class="required">*</span></label>
+                <p class="info-text">Selecione uma ou mais opções</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="equipe1" name="equipe" value="Serviços de saúde">
+                        <label for="equipe1">🏥 Serviços de saúde</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="equipe2" name="equipe" value="Serviços estéticos">
+                        <label for="equipe2">💆 Serviços estéticos</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="equipe3" name="equipe" value="Serviços de bem-estar">
+                        <label for="equipe3">🧘 Serviços de bem-estar</label>
+                    </div>
+                    <div class="checkbox-option">
+                        <input type="checkbox" id="equipe4" name="equipe" value="Serviços de recepção e apoio">
+                        <label for="equipe4">📋 Serviços de recepção e apoio</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Endereço -->
+            <div class="form-group">
+                <label for="endereco">Endereço</label>
+                <input type="text" id="endereco" name="endereco" placeholder="Rua, número, bairro, cidade - UF">
+                <p class="info-text">Opcional</p>
+            </div>
+
+            <!-- Quem convidou e Profissão -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="quemConvidou">Quem convidou?</label>
+                    <input type="text" id="quemConvidou" name="quemConvidou" placeholder="Nome de quem te convidou">
+                </div>
+                <div class="form-group">
+                    <label for="profissao">Profissão</label>
+                    <input type="text" id="profissao" name="profissao" placeholder="Sua profissão">
+                </div>
+            </div>
+
+            <!-- Detalhe contribuição -->
+            <div class="form-group">
+                <label for="contribuicao">Como gostaria de contribuir?</label>
+                <textarea id="contribuicao" name="contribuicao" placeholder="Descreva suas habilidades, experiências e como você pode ajudar..."></textarea>
+                <p class="info-text">Conte-nos mais sobre você e suas motivações</p>
+            </div>
+
+            <!-- Observações -->
+            <div class="form-group">
+                <label for="observacoes">Observações</label>
+                <textarea id="observacoes" name="observacoes" placeholder="Alguma informação adicional que queira compartilhar..."></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn" id="submitBtn">Enviar Cadastro de Voluntário</button>
+        </form>
+    </div>
+
+    <script>
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzKgWvlYnzcviY6HkhhxtHE57wdpA2nuKC8NXxuRZVvlQfqZtIGJz0_sJIzHqPagBOE/exec';
+        
+        const successMessage = document.getElementById('successMessage');
+        const errorMessage = document.getElementById('errorMessage');
+        const loadingMessage = document.getElementById('loadingMessage');
+
+        function showMessage(element, duration = 5000) {
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'none';
+            loadingMessage.style.display = 'none';
+            
+            element.style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if (element !== loadingMessage && duration > 0) {
+                setTimeout(() => {
+                    element.style.display = 'none';
+                }, duration);
+            }
+        }
+
+        // Máscara para Telefone
+        document.getElementById('telefone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length <= 11) {
+                value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Envio do formulário
+        const form = document.getElementById('voluntariosForm');
+        const checkboxes = document.querySelectorAll('input[name="equipe"]');
+        
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Verificar se pelo menos uma equipe foi selecionada
+            const equipeSelecionada = Array.from(checkboxes).some(cb => cb.checked);
+            
+            if (!equipeSelecionada) {
+                showMessage(errorMessage);
+                errorMessage.innerHTML = '❌ Por favor, selecione pelo menos uma equipe para trabalhar!';
+                return;
+            }
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<span class="spinner"></span> Enviando...';
+            
+            showMessage(loadingMessage, 0);
+            
+            // Coletar equipes selecionadas
+            const equipesSelecionadas = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value)
+                .join(', ');
+            
+            // Coletar dados
+            const formData = {
+                nome: document.getElementById('nome').value,
+                telefone: document.getElementById('telefone').value,
+                equipes: equipesSelecionadas,
+                endereco: document.getElementById('endereco').value || 'Não informado',
+                quemConvidou: document.getElementById('quemConvidou').value || 'Não informado',
+                profissao: document.getElementById('profissao').value || 'Não informado',
+                contribuicao: document.getElementById('contribuicao').value || 'Não informado',
+                observacoes: document.getElementById('observacoes').value || 'Nenhuma observação'
+            };
+
+            console.log('📤 Enviando dados:', formData);
+
+            try {
+                const response = await fetch(SCRIPT_URL, {
+                    redirect: 'follow',
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'text/plain;charset=utf-8',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                console.log('📥 Response status:', response.status);
+
+                if (response.ok || response.status === 200 || response.status === 0) {
+                    showMessage(successMessage);
+                    
+                    // Resetar formulário após 2 segundos
+                    setTimeout(() => {
+                        form.reset();
+                    }, 2000);
+                } else {
+                    showMessage(errorMessage);
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro:', error);
+                showMessage(errorMessage);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Enviar Cadastro de Voluntário';
+            }
+        });
+    </script>
+</body>
+</html>
